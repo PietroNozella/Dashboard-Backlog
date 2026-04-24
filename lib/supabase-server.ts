@@ -1,8 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-// Cliente Supabase para uso em Server Components e Server Actions
-// No Next.js 15+, cookies() é assíncrono — deve ser aguardado antes de usar
 export async function createClient() {
   const cookieStore = await cookies();
 
@@ -14,13 +12,21 @@ export async function createClient() {
         getAll() {
           return cookieStore.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(
+          cookiesToSet: {
+            name: string;
+            value: string;
+            options?: Record<string, unknown>;
+          }[],
+        ) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options),
+              // options tipado como Record para compatibilidade com ResponseCookie
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              cookieStore.set(name, value, options as any),
             );
           } catch {
-            // Chamado a partir de um Server Component sem mutação — seguro ignorar
+            // Server Component sem mutação — seguro ignorar
           }
         },
       },
