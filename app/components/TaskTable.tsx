@@ -71,7 +71,9 @@ export function TaskTable({ tasks, onRowClick }: TaskTableProps) {
                 <span className="flex items-center gap-1.5 truncate">
                   {task.title}
                   {task.attachment_url && (
-                    <Paperclip className="h-3.5 w-3.5 shrink-0 text-muted-foreground" title="Tem anexo PDF" />
+                    <span title="Tem anexo PDF">
+                      <Paperclip className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                    </span>
                   )}
                 </span>
               </TableCell>
