@@ -23,6 +23,12 @@ export function statusToBadgeVariant(
   return "statusCanceled";
 }
 
+// Peso numérico para manter tarefas concluídas sempre no fim
+export function statusWeight(status: TaskStatus): number {
+  if (status === "Concluído") return 1;
+  return 0;
+}
+
 // Peso numérico para ordenação por prioridade (Alta primeiro)
 export function priorityWeight(priority: TaskPriority): number {
   if (priority === "Alta") return 0;
