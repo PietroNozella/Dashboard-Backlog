@@ -286,9 +286,13 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
                 id="requester"
                 value={form.requester}
                 onChange={(e) => updateField("requester", e.target.value)}
-                placeholder="Nome do cliente"
+                placeholder="Ex.: Willian(altivuz)"
                 required
               />
+              <p className="text-xs text-muted-foreground">
+                Use o formato Nome(cliente) para separar automaticamente as
+                caixas por cliente.
+              </p>
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="request_date">Data da Solicitação</Label>

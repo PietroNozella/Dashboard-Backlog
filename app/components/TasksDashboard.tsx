@@ -10,7 +10,7 @@ import type { Task } from "@/types/task";
 import { ALL, Filters, type SortKey } from "./Filters";
 import { TaskModal } from "./TaskModal";
 import { TaskTable } from "./TaskTable";
-import { priorityWeight } from "./helpers";
+import { groupTasksByClient, priorityWeight } from "./helpers";
 
 interface TasksDashboardProps {
   initialTasks: Task[];
@@ -119,6 +119,11 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
     return sorted;
   }, [tasks, search, statusFilter, assigneeFilter, priorityFilter, sort]);
 
+  const visibleTaskGroups = useMemo(
+    () => groupTasksByClient(visibleTasks),
+    [visibleTasks],
+  );
+
   // Abre modal em modo "criar"
   function handleNewTask() {
     setEditingTask(null);
@@ -143,6 +148,9 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
             {visibleTasks.length} de {tasks.length}{" "}
             {tasks.length === 1 ? "tarefa" : "tarefas"}
           </p>
+          <p className="text-sm text-muted-foreground">
+            Organizado em caixas por cliente para evitar mistura entre contas.
+          </p>
         </div>
 
         <Button onClick={handleNewTask}>
@@ -165,8 +173,37 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
         onSortChange={setSort}
       />
 
-      {/* Tabela */}
-      <TaskTable tasks={visibleTasks} onRowClick={handleEditTask} />
+      {/* Tarefas agrupadas por cliente */}
+      {visibleTaskGroups.length === 0 ? (
+        <TaskTable tasks={visibleTasks} onRowClick={handleEditTask} />
+      ) : (
+        <div className="space-y-4">
+          {visibleTaskGroups.map((group) => (
+            <section
+              key={group.client}
+              className="overflow-hidden rounded-2xl border bg-card shadow-sm"
+            >
+              <div className="flex flex-col gap-2 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="text-base font-semibold">{group.client}</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Caixa de backlog desse cliente
+                  </p>
+                </div>
+                <span className="inline-flex w-fit items-center rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                  {group.tasks.length}{" "}
+                  {group.tasks.length === 1 ? "tarefa" : "tarefas"}
+                </span>
+              </div>
+              <TaskTable
+                tasks={group.tasks}
+                onRowClick={handleEditTask}
+                variant="embedded"
+              />
+            </section>
+          ))}
+        </div>
+      )}
 
       {/* Modal de criar/editar */}
       <TaskModal
