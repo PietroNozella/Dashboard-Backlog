@@ -31,24 +31,24 @@ export function TaskTable({
     return (
       <div className="rounded-[1.5rem] border border-border/80 bg-card/70 p-12 text-center shadow-[0_16px_40px_rgba(0,0,0,0.16)]">
         <p className="text-sm text-muted-foreground">
-          Nenhuma tarefa encontrada. Crie a primeira tarefa para começar.
+          Nenhuma tarefa encontrada. Crie a primeira tarefa para comeÃ§ar.
         </p>
       </div>
     );
   }
 
   const table = (
-    <Table>
+    <Table className="min-w-[980px] xl:min-w-full">
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[120px]">Status</TableHead>
-          <TableHead className="w-[100px]">Prioridade</TableHead>
+          <TableHead className="w-[130px]">Status</TableHead>
+          <TableHead className="w-[120px]">Prioridade</TableHead>
           <TableHead>Solicitante</TableHead>
-          <TableHead className="w-[120px]">Solicitação</TableHead>
+          <TableHead className="w-[130px]">SolicitaÃ§Ã£o</TableHead>
           <TableHead>Tarefa</TableHead>
-          <TableHead className="w-[110px]">Responsável</TableHead>
-          <TableHead className="w-[110px]">Início</TableHead>
-          <TableHead className="w-[110px]">Conclusão</TableHead>
+          <TableHead className="w-[130px]">ResponsÃ¡vel</TableHead>
+          <TableHead className="w-[120px]">InÃ­cio</TableHead>
+          <TableHead className="w-[120px]">ConclusÃ£o</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -74,11 +74,11 @@ export function TaskTable({
             <TableCell className="text-muted-foreground">
               {formatDateBR(task.request_date)}
             </TableCell>
-            <TableCell className="max-w-[300px]">
-              <span className="flex items-center gap-1.5 truncate font-medium text-foreground transition-colors group-hover:text-primary-foreground">
+            <TableCell className="max-w-[320px] xl:max-w-[560px]">
+              <span className="flex items-start gap-1.5 font-medium leading-6 text-foreground transition-colors group-hover:text-primary-foreground">
                 {task.title}
                 {task.attachment_url && (
-                  <span title="Tem anexo PDF">
+                  <span title="Tem anexo PDF" className="pt-1">
                     <Paperclip className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                   </span>
                 )}

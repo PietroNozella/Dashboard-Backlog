@@ -149,55 +149,58 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="overflow-hidden rounded-[2rem] border border-border/70 bg-[linear-gradient(135deg,rgba(8,22,36,0.92),rgba(18,42,39,0.88))] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div className="space-y-3">
+    <div className="space-y-8 xl:space-y-10">
+      <section className="overflow-hidden rounded-[2rem] border border-border/70 bg-[linear-gradient(135deg,rgba(8,22,36,0.92),rgba(18,42,39,0.88))] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.28)] lg:p-8 xl:p-10 2xl:p-12">
+        <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between xl:gap-10">
+          <div className="space-y-3 xl:max-w-4xl">
             <span className="inline-flex w-fit items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-foreground/90">
               Painel operacional
             </span>
 
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl xl:text-[2.75rem]">
                 Backlog de Tarefas
               </h1>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground xl:text-[15px] xl:leading-7">
                 Visualize demandas por cliente com leitura mais clara para
-                priorização, andamento e alinhamento entre times.
+                priorizaÃ§Ã£o, andamento e alinhamento entre times.
               </p>
             </div>
           </div>
 
-          <Button onClick={handleNewTask} className="min-w-[160px]">
+          <Button
+            onClick={handleNewTask}
+            className="min-w-[160px] self-start xl:min-w-[190px] xl:self-auto"
+          >
             <Plus className="mr-2 h-4 w-4" />
             Nova tarefa
           </Button>
         </div>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-3 backdrop-blur-sm">
+        <div className="mt-8 grid gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.1fr)_minmax(0,1.4fr)] xl:gap-4">
+          <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-4 backdrop-blur-sm xl:px-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              Visíveis
+              VisÃ­veis
             </p>
-            <p className="mt-1 text-2xl font-semibold text-foreground">
+            <p className="mt-2 text-2xl font-semibold text-foreground xl:text-[2rem]">
               {visibleTasks.length}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-3 backdrop-blur-sm">
+          <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-4 backdrop-blur-sm xl:px-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Total
             </p>
-            <p className="mt-1 text-2xl font-semibold text-foreground">
+            <p className="mt-2 text-2xl font-semibold text-foreground xl:text-[2rem]">
               {tasks.length}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-3 backdrop-blur-sm">
+          <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-4 backdrop-blur-sm xl:px-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              Organização
+              OrganizaÃ§Ã£o
             </p>
-            <p className="mt-1 text-sm text-foreground">
+            <p className="mt-2 max-w-xl text-sm leading-6 text-foreground">
               Caixas por cliente para evitar mistura entre contas.
             </p>
           </div>
@@ -220,7 +223,7 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
       {visibleTaskGroups.length === 0 ? (
         <TaskTable tasks={visibleTasks} onRowClick={handleEditTask} />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-5 xl:space-y-6">
           {visibleTaskGroups.map((group) => {
             const totalPages = Math.max(
               1,
@@ -242,12 +245,12 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
                 key={group.client}
                 className="overflow-hidden rounded-[1.75rem] border border-border/80 bg-card/80 shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-sm"
               >
-                <div className="flex flex-col gap-3 border-b border-border/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0))] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-3 border-b border-border/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0))] px-5 py-4 sm:flex-row sm:items-center sm:justify-between xl:px-6 xl:py-5">
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary/85">
                       Cliente
                     </p>
-                    <h2 className="text-lg font-semibold text-foreground">
+                    <h2 className="text-lg font-semibold text-foreground xl:text-xl">
                       {group.client}
                     </h2>
                   </div>
@@ -265,14 +268,14 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
                 />
 
                 {hasPagination && (
-                  <div className="flex items-center justify-between gap-3 border-t border-border/70 bg-background/35 px-5 py-3">
+                  <div className="flex flex-col gap-3 border-t border-border/70 bg-background/35 px-5 py-3 sm:flex-row sm:items-center sm:justify-between xl:px-6">
                     <p className="text-xs text-muted-foreground">
                       Mostrando {pageStart + 1}-
                       {Math.min(pageStart + PAGE_SIZE, group.tasks.length)} de{" "}
                       {group.tasks.length}
                     </p>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                       <Button
                         type="button"
                         variant="outline"
@@ -287,7 +290,7 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
                       </Button>
 
                       <span className="rounded-full border border-border/70 bg-background/60 px-3 py-1 text-xs text-muted-foreground">
-                        Página {currentPage} de {totalPages}
+                        PÃ¡gina {currentPage} de {totalPages}
                       </span>
 
                       <Button
@@ -299,7 +302,7 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
                         }
                         disabled={currentPage === totalPages}
                       >
-                        Próxima
+                        PrÃ³xima
                         <ChevronRight className="ml-1 h-4 w-4" />
                       </Button>
                     </div>

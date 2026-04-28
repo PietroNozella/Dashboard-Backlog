@@ -38,8 +38,8 @@ interface FiltersProps {
 
 export function Filters(props: FiltersProps) {
   return (
-    <section className="rounded-[1.75rem] border border-border/80 bg-card/80 p-4 shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur-sm">
-      <div className="mb-4">
+    <section className="rounded-[1.75rem] border border-border/80 bg-card/80 p-4 shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur-sm lg:p-5 xl:p-6">
+      <div className="mb-4 xl:mb-5">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary/85">
           Filtros
         </p>
@@ -48,8 +48,8 @@ export function Filters(props: FiltersProps) {
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
-        <div className="relative lg:col-span-2">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-12 xl:gap-4">
+        <div className="relative xl:col-span-4">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Buscar por solicitante ou tarefa..."
@@ -65,7 +65,7 @@ export function Filters(props: FiltersProps) {
             props.onStatusChange(value as TaskStatus | typeof ALL)
           }
         >
-          <SelectTrigger>
+          <SelectTrigger className="xl:col-span-2">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -84,11 +84,11 @@ export function Filters(props: FiltersProps) {
             props.onAssigneeChange(value as TaskAssignee | typeof ALL)
           }
         >
-          <SelectTrigger>
-            <SelectValue placeholder="Responsável" />
+          <SelectTrigger className="xl:col-span-2">
+            <SelectValue placeholder="ResponsÃ¡vel" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL}>Todos responsáveis</SelectItem>
+            <SelectItem value={ALL}>Todos responsÃ¡veis</SelectItem>
             {TASK_ASSIGNEES.map((assignee) => (
               <SelectItem key={assignee} value={assignee}>
                 {assignee}
@@ -103,7 +103,7 @@ export function Filters(props: FiltersProps) {
             props.onPriorityChange(value as TaskPriority | typeof ALL)
           }
         >
-          <SelectTrigger>
+          <SelectTrigger className="xl:col-span-2">
             <SelectValue placeholder="Prioridade" />
           </SelectTrigger>
           <SelectContent>
@@ -120,13 +120,13 @@ export function Filters(props: FiltersProps) {
           value={props.sort}
           onValueChange={(value) => props.onSortChange(value as SortKey)}
         >
-          <SelectTrigger>
+          <SelectTrigger className="xl:col-span-2">
             <SelectValue placeholder="Ordenar por" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="request_date_desc">Mais recentes</SelectItem>
             <SelectItem value="request_date_asc">Mais antigas</SelectItem>
-            <SelectItem value="priority">Prioridade (Alta → Baixa)</SelectItem>
+            <SelectItem value="priority">Prioridade (Alta â†’ Baixa)</SelectItem>
           </SelectContent>
         </Select>
       </div>
