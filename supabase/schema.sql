@@ -3,12 +3,12 @@
 -- Execute este arquivo inteiro no SQL Editor do Supabase.
 -- =====================================================================
 
--- Extensão necessária para gerar UUIDs
+-- Extensao necessaria para gerar UUIDs
 create extension if not exists "uuid-ossp";
 
 -- ---------------------------------------------------------------------
--- ENUMs do domínio
--- Definem os valores válidos para status, prioridade e responsável.
+-- ENUMs do dominio
+-- Definem os valores validos para status, prioridade e responsavel.
 -- ---------------------------------------------------------------------
 do $$
 begin
@@ -34,32 +34,36 @@ create table if not exists public.tasks (
   -- Status atual da tarefa no fluxo de trabalho
   status task_status not null default 'Pendente',
 
-  -- Nível de prioridade (impacta a ordenação visual)
+  -- Nivel de prioridade (impacta a ordenacao visual)
   priority task_priority not null default 'Média',
 
   -- Quem solicitou (cliente ou stakeholder)
   requester text not null,
 
-  -- Quando a solicitação chegou
+  -- Quando a solicitacao chegou
   request_date date not null default current_date,
 
-  -- Título curto da tarefa
+  -- Titulo curto da tarefa
   title text not null,
 
-  -- Descrição detalhada
+  -- Descricao detalhada
   description text,
 
-  -- Responsável pela execução (Dev ou Comercial)
+  -- Responsavel pela execucao (Dev ou Comercial)
   assignee task_assignee not null default 'Dev',
 
-  -- Data em que o trabalho começou de fato
+  -- Data em que o trabalho comecou de fato
   start_date date,
 
-  -- Data de conclusão
+  -- Data de conclusao
   completion_date date,
 
-  -- Observações livres (notas internas)
+  -- Observacoes livres (notas internas)
   notes text,
+
+  -- Anexo PDF salvo no Storage
+  attachment_url text,
+  attachment_name text,
 
   -- Auditoria
   created_at timestamptz not null default now(),
@@ -67,7 +71,7 @@ create table if not exists public.tasks (
 );
 
 -- ---------------------------------------------------------------------
--- Índices auxiliares para acelerar filtros e ordenações comuns
+-- Indices auxiliares para acelerar filtros e ordenacoes comuns
 -- ---------------------------------------------------------------------
 create index if not exists idx_tasks_status on public.tasks (status);
 create index if not exists idx_tasks_priority on public.tasks (priority);
@@ -91,14 +95,14 @@ create trigger trg_tasks_updated_at
   for each row execute procedure public.set_updated_at();
 
 -- ---------------------------------------------------------------------
--- Realtime: habilita notificações de INSERT/UPDATE/DELETE
+-- Realtime: habilita notificacoes de INSERT/UPDATE/DELETE
 -- ---------------------------------------------------------------------
 alter publication supabase_realtime add table public.tasks;
 
 -- ---------------------------------------------------------------------
 -- Row Level Security
 -- Por enquanto liberamos tudo para a chave anon (uso interno).
--- Quando adicionar autenticação, restrinja por auth.uid().
+-- Quando adicionar autenticacao, restrinja por auth.uid().
 -- ---------------------------------------------------------------------
 alter table public.tasks enable row level security;
 

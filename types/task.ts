@@ -1,4 +1,4 @@
-// Tipos do domínio "Task" — espelham os ENUMs e colunas da tabela no Supabase
+// Tipos do dominio "Task" - espelham os ENUMs e colunas da tabela no Supabase
 
 export type TaskStatus = "Pendente" | "Em Andamento" | "Concluído" | "Cancelado";
 export type TaskPriority = "Alta" | "Média" | "Baixa";
@@ -29,12 +29,13 @@ export interface Task {
   start_date: string | null;
   completion_date: string | null;
   notes: string | null;
-  attachment_url: string | null; // URL pública do PDF no Supabase Storage
+  attachment_url: string | null; // URL publica do PDF no Supabase Storage
+  attachment_name: string | null; // Nome original do PDF para exibicao
   created_at: string;
   updated_at: string;
 }
 
-// Payload usado para criar/editar (subset editável da tabela)
+// Payload usado para criar/editar (subset editavel da tabela)
 export interface TaskInput {
   status: TaskStatus;
   priority: TaskPriority;
@@ -47,4 +48,5 @@ export interface TaskInput {
   completion_date: string | null;
   notes: string | null;
   attachment_url: string | null;
+  attachment_name: string | null;
 }

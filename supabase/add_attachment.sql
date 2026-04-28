@@ -3,18 +3,22 @@
 -- Execute no SQL Editor do Supabase
 -- =====================================================================
 
--- Coluna que armazena a URL pública do PDF no Storage
+-- Coluna que armazena a URL publica do PDF no Storage
 alter table public.tasks
   add column if not exists attachment_url text;
 
+-- Coluna que armazena o nome original do PDF para exibicao
+alter table public.tasks
+  add column if not exists attachment_name text;
+
 -- =====================================================================
--- Bucket público para armazenar os PDFs
+-- Bucket publico para armazenar os PDFs
 -- =====================================================================
 insert into storage.buckets (id, name, public)
 values ('task-attachments', 'task-attachments', true)
 on conflict (id) do nothing;
 
--- Policy: leitura pública (qualquer um pode ver o PDF pelo link)
+-- Policy: leitura publica (qualquer um pode ver o PDF pelo link)
 drop policy if exists "attachments_select" on storage.objects;
 create policy "attachments_select"
   on storage.objects for select

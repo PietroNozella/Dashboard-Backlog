@@ -5,6 +5,11 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase-server";
 import type { TaskInput } from "@/types/task";
 
+interface UploadedAttachment {
+  url: string;
+  name: string;
+}
+
 // =====================================================================
 // Server Actions de CRUD para a tabela `tasks`
 // =====================================================================
@@ -18,14 +23,17 @@ function normalize(input: TaskInput): TaskInput {
     start_date: input.start_date || null,
     completion_date: input.completion_date || null,
     attachment_url: input.attachment_url || null,
+    attachment_name: input.attachment_name?.trim() || null,
   };
 }
 
 // ---------------------------------------------------------------------
-// UPLOAD — recebe FormData com o arquivo PDF e devolve a URL pública
+// UPLOAD - recebe FormData com o arquivo PDF e devolve URL + nome original
 // Chamada separada do create/update para manter as actions coesas
 // ---------------------------------------------------------------------
-export async function uploadAttachment(formData: FormData): Promise<string> {
+export async function uploadAttachment(
+  formData: FormData,
+): Promise<UploadedAttachment> {
   const supabase = await createClient();
   const file = formData.get("file") as File;
 
@@ -33,7 +41,7 @@ export async function uploadAttachment(formData: FormData): Promise<string> {
   if (file.type !== "application/pdf") throw new Error("Apenas PDFs são aceitos.");
   if (file.size > 10 * 1024 * 1024) throw new Error("Tamanho máximo: 10 MB.");
 
-  // Nome único para evitar colisão de arquivos no bucket
+  // Nome unico para evitar colisao de arquivos no bucket
   const ext = "pdf";
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
@@ -43,12 +51,15 @@ export async function uploadAttachment(formData: FormData): Promise<string> {
 
   if (error) throw new Error(`Erro no upload: ${error.message}`);
 
-  // Monta a URL pública do objeto recém-enviado
+  // Monta a URL publica do objeto recem-enviado
   const { data } = supabase.storage
     .from("task-attachments")
     .getPublicUrl(filename);
 
-  return data.publicUrl;
+  return {
+    url: data.publicUrl,
+    name: file.name,
+  };
 }
 
 // ---------------------------------------------------------------------
@@ -57,7 +68,7 @@ export async function uploadAttachment(formData: FormData): Promise<string> {
 export async function deleteAttachment(url: string): Promise<void> {
   const supabase = await createClient();
 
-  // Extrai o nome do arquivo a partir da URL pública
+  // Extrai o nome do arquivo a partir da URL publica
   const filename = url.split("/task-attachments/").at(-1);
   if (!filename) return;
 

@@ -61,6 +61,7 @@ function buildInitialState(task: Task | null): TaskInput {
       completion_date: task.completion_date,
       notes: task.notes,
       attachment_url: task.attachment_url,
+      attachment_name: task.attachment_name,
     };
   }
 
@@ -76,6 +77,7 @@ function buildInitialState(task: Task | null): TaskInput {
     completion_date: "",
     notes: "",
     attachment_url: null,
+    attachment_name: null,
   };
 }
 
@@ -84,9 +86,7 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  // Arquivo selecionado localmente — ainda não enviado ao servidor
   const [pendingFile, setPendingFile] = useState<File | null>(null);
-  // true enquanto o upload está acontecendo (separado do isPending do form)
   const [isUploading, setIsUploading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -105,7 +105,6 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
-  // Usuário escolheu um arquivo — valida localmente e guarda no estado
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -114,6 +113,7 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
       setError("Apenas arquivos PDF são aceitos.");
       return;
     }
+
     if (file.size > 10 * 1024 * 1024) {
       setError("Tamanho máximo: 10 MB.");
       return;
@@ -123,7 +123,6 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
     setPendingFile(file);
   }
 
-  // Remove o PDF atual (tanto o pendente quanto o já salvo no banco)
   async function handleRemoveAttachment() {
     if (pendingFile) {
       setPendingFile(null);
@@ -131,12 +130,12 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
       return;
     }
 
-    // Se já existe uma URL salva, deleta do Storage
     if (form.attachment_url) {
       setIsUploading(true);
       try {
         await deleteAttachment(form.attachment_url);
         updateField("attachment_url", null);
+        updateField("attachment_name", null);
       } catch {
         setError("Erro ao remover anexo.");
       } finally {
@@ -157,17 +156,25 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
     startTransition(async () => {
       try {
         let attachmentUrl = form.attachment_url;
+        let attachmentName = form.attachment_name;
 
-        // Faz upload do arquivo pendente antes de salvar a task
         if (pendingFile) {
           setIsUploading(true);
           const fd = new FormData();
           fd.append("file", pendingFile);
-          attachmentUrl = await uploadAttachment(fd);
+
+          const uploadedAttachment = await uploadAttachment(fd);
+          attachmentUrl = uploadedAttachment.url;
+          attachmentName = uploadedAttachment.name;
+
           setIsUploading(false);
         }
 
-        const finalInput: TaskInput = { ...form, attachment_url: attachmentUrl };
+        const finalInput: TaskInput = {
+          ...form,
+          attachment_url: attachmentUrl,
+          attachment_name: attachmentName,
+        };
 
         if (isEditing && task) {
           await updateTask(task.id, finalInput);
@@ -189,7 +196,6 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
 
     startTransition(async () => {
       try {
-        // Remove o PDF do Storage junto com a task
         if (task.attachment_url) await deleteAttachment(task.attachment_url);
         await deleteTask(task.id);
         onOpenChange(false);
@@ -199,9 +205,9 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
     });
   }
 
-  // Nome legível para exibir no campo (arquivo local ou nome extraído da URL)
   const attachmentLabel =
     pendingFile?.name ??
+    form.attachment_name ??
     (form.attachment_url
       ? decodeURIComponent(form.attachment_url.split("/").at(-1) ?? "anexo.pdf")
       : null);
@@ -213,9 +219,7 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {isEditing ? "Editar tarefa" : "Nova tarefa"}
-          </DialogTitle>
+          <DialogTitle>{isEditing ? "Editar tarefa" : "Nova tarefa"}</DialogTitle>
           <DialogDescription>
             {isEditing
               ? "Atualize os campos abaixo e salve as alterações."
@@ -224,7 +228,6 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Status / Prioridade / Responsável */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div className="space-y-1.5">
               <Label htmlFor="status">Status</Label>
@@ -237,7 +240,9 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
                 </SelectTrigger>
                 <SelectContent>
                   {TASK_STATUSES.map((s) => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                    <SelectItem key={s} value={s}>
+                      {s}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -254,7 +259,9 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
                 </SelectTrigger>
                 <SelectContent>
                   {TASK_PRIORITIES.map((p) => (
-                    <SelectItem key={p} value={p}>{p}</SelectItem>
+                    <SelectItem key={p} value={p}>
+                      {p}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -271,14 +278,15 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
                 </SelectTrigger>
                 <SelectContent>
                   {TASK_ASSIGNEES.map((a) => (
-                    <SelectItem key={a} value={a}>{a}</SelectItem>
+                    <SelectItem key={a} value={a}>
+                      {a}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          {/* Solicitante + Data */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="requester">Solicitante *</Label>
@@ -290,10 +298,11 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
                 required
               />
               <p className="text-xs text-muted-foreground">
-                Use o formato Nome(cliente) para separar automaticamente as
-                caixas por cliente.
+                Use o formato Nome(cliente) para separar automaticamente as caixas
+                por cliente.
               </p>
             </div>
+
             <div className="space-y-1.5">
               <Label htmlFor="request_date">Data da Solicitação</Label>
               <Input
@@ -305,7 +314,6 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
             </div>
           </div>
 
-          {/* Título */}
           <div className="space-y-1.5">
             <Label htmlFor="title">Tarefa *</Label>
             <Input
@@ -317,7 +325,6 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
             />
           </div>
 
-          {/* Descrição */}
           <div className="space-y-1.5">
             <Label htmlFor="description">Descrição</Label>
             <Textarea
@@ -329,7 +336,6 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
             />
           </div>
 
-          {/* Datas início / conclusão */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="start_date">Data de Início</Label>
@@ -340,6 +346,7 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
                 onChange={(e) => updateField("start_date", e.target.value)}
               />
             </div>
+
             <div className="space-y-1.5">
               <Label htmlFor="completion_date">Data de Conclusão</Label>
               <Input
@@ -351,7 +358,6 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
             </div>
           </div>
 
-          {/* Observações */}
           <div className="space-y-1.5">
             <Label htmlFor="notes">Observações</Label>
             <Textarea
@@ -363,19 +369,14 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
             />
           </div>
 
-          {/* ----------------------------------------------------------------
-              Anexo PDF
-          ---------------------------------------------------------------- */}
           <div className="space-y-1.5">
             <Label>Anexo (PDF)</Label>
 
             {hasAttachment ? (
-              // Exibe o arquivo selecionado/salvo com opções de abrir e remover
               <div className="flex items-center gap-2 rounded-md border bg-muted/40 px-3 py-2">
                 <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                 <span className="flex-1 truncate text-sm">{attachmentLabel}</span>
 
-                {/* Link para abrir o PDF salvo (só disponível quando já está no servidor) */}
                 {form.attachment_url && !pendingFile && (
                   <a
                     href={form.attachment_url}
@@ -398,7 +399,6 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
                 </button>
               </div>
             ) : (
-              // Área de clique para selecionar arquivo
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
@@ -410,7 +410,6 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
               </button>
             )}
 
-            {/* Input de arquivo oculto — ativado pelo botão acima */}
             <input
               ref={fileInputRef}
               type="file"
@@ -421,7 +420,9 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
           </div>
 
           {error && (
-            <p className="text-sm text-destructive" role="alert">{error}</p>
+            <p className="text-sm text-destructive" role="alert">
+              {error}
+            </p>
           )}
 
           <DialogFooter className="gap-2 sm:gap-2">
@@ -437,6 +438,7 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
                 Deletar
               </Button>
             )}
+
             <Button
               type="button"
               variant="outline"
@@ -445,14 +447,15 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
             >
               Cancelar
             </Button>
+
             <Button type="submit" disabled={busy}>
               {isUploading
                 ? "Enviando PDF..."
                 : isPending
-                ? "Salvando..."
-                : isEditing
-                ? "Salvar"
-                : "Criar"}
+                  ? "Salvando..."
+                  : isEditing
+                    ? "Salvar"
+                    : "Criar"}
             </Button>
           </DialogFooter>
         </form>
