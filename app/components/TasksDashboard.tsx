@@ -8,13 +8,13 @@ import { createClient } from "@/lib/supabase";
 import type { Task } from "@/types/task";
 
 import { ALL, Filters, type SortKey } from "./Filters";
-import { TaskModal } from "./TaskModal";
-import { TaskTable } from "./TaskTable";
 import {
   groupTasksByClient,
   priorityWeight,
   statusWeight,
 } from "./helpers";
+import { TaskModal } from "./TaskModal";
+import { TaskTable } from "./TaskTable";
 
 interface TasksDashboardProps {
   initialTasks: Task[];
@@ -55,20 +55,24 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
           if (payload.eventType === "INSERT") {
             const newTask = payload.new as Task;
             setTasks((prev) =>
-              prev.some((t) => t.id === newTask.id) ? prev : [newTask, ...prev],
+              prev.some((task) => task.id === newTask.id)
+                ? prev
+                : [newTask, ...prev],
             );
           }
 
           if (payload.eventType === "UPDATE") {
-            const updated = payload.new as Task;
+            const updatedTask = payload.new as Task;
             setTasks((prev) =>
-              prev.map((t) => (t.id === updated.id ? updated : t)),
+              prev.map((task) =>
+                task.id === updatedTask.id ? updatedTask : task,
+              ),
             );
           }
 
           if (payload.eventType === "DELETE") {
             const deletedId = (payload.old as { id: string }).id;
-            setTasks((prev) => prev.filter((t) => t.id !== deletedId));
+            setTasks((prev) => prev.filter((task) => task.id !== deletedId));
           }
         },
       )
@@ -82,13 +86,17 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
   const visibleTasks = useMemo(() => {
     const term = search.trim().toLowerCase();
 
-    const filtered = tasks.filter((t) => {
-      if (statusFilter !== ALL && t.status !== statusFilter) return false;
-      if (assigneeFilter !== ALL && t.assignee !== assigneeFilter) return false;
-      if (priorityFilter !== ALL && t.priority !== priorityFilter) return false;
+    const filtered = tasks.filter((task) => {
+      if (statusFilter !== ALL && task.status !== statusFilter) return false;
+      if (assigneeFilter !== ALL && task.assignee !== assigneeFilter) {
+        return false;
+      }
+      if (priorityFilter !== ALL && task.priority !== priorityFilter) {
+        return false;
+      }
 
       if (term) {
-        const haystack = `${t.requester} ${t.title}`.toLowerCase();
+        const haystack = `${task.requester} ${task.title}`.toLowerCase();
         if (!haystack.includes(term)) return false;
       }
 
@@ -142,25 +150,59 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Backlog de Tarefas
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {visibleTasks.length} de {tasks.length}{" "}
-            {tasks.length === 1 ? "tarefa" : "tarefas"}
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Organizado em caixas por cliente para evitar mistura entre contas.
-          </p>
+      <section className="overflow-hidden rounded-[2rem] border border-border/70 bg-[linear-gradient(135deg,rgba(8,22,36,0.92),rgba(18,42,39,0.88))] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.28)]">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-3">
+            <span className="inline-flex w-fit items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-foreground/90">
+              Painel operacional
+            </span>
+
+            <div>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+                Backlog de Tarefas
+              </h1>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                Visualize demandas por cliente com leitura mais clara para
+                priorização, andamento e alinhamento entre times.
+              </p>
+            </div>
+          </div>
+
+          <Button onClick={handleNewTask} className="min-w-[160px]">
+            <Plus className="mr-2 h-4 w-4" />
+            Nova tarefa
+          </Button>
         </div>
 
-        <Button onClick={handleNewTask}>
-          <Plus className="mr-2 h-4 w-4" />
-          Nova tarefa
-        </Button>
-      </div>
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-3 backdrop-blur-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Visíveis
+            </p>
+            <p className="mt-1 text-2xl font-semibold text-foreground">
+              {visibleTasks.length}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-3 backdrop-blur-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Total
+            </p>
+            <p className="mt-1 text-2xl font-semibold text-foreground">
+              {tasks.length}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-3 backdrop-blur-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Organização
+            </p>
+            <p className="mt-1 text-sm text-foreground">
+              Caixas por cliente para evitar mistura entre contas.
+            </p>
+          </div>
+        </div>
+      </section>
 
       <Filters
         search={search}
@@ -198,13 +240,19 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
             return (
               <section
                 key={group.client}
-                className="overflow-hidden rounded-2xl border bg-card shadow-sm"
+                className="overflow-hidden rounded-[1.75rem] border border-border/80 bg-card/80 shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-sm"
               >
-                <div className="flex flex-col gap-2 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-3 border-b border-border/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0))] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <h2 className="text-base font-semibold">{group.client}</h2>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary/85">
+                      Cliente
+                    </p>
+                    <h2 className="text-lg font-semibold text-foreground">
+                      {group.client}
+                    </h2>
                   </div>
-                  <span className="inline-flex w-fit items-center rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+
+                  <span className="inline-flex w-fit items-center rounded-full border border-border/70 bg-background/50 px-3 py-1 text-xs font-medium text-muted-foreground">
                     {group.tasks.length}{" "}
                     {group.tasks.length === 1 ? "tarefa" : "tarefas"}
                   </span>
@@ -217,7 +265,7 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
                 />
 
                 {hasPagination && (
-                  <div className="flex items-center justify-between gap-3 border-t px-5 py-3">
+                  <div className="flex items-center justify-between gap-3 border-t border-border/70 bg-background/35 px-5 py-3">
                     <p className="text-xs text-muted-foreground">
                       Mostrando {pageStart + 1}-
                       {Math.min(pageStart + PAGE_SIZE, group.tasks.length)} de{" "}
@@ -238,7 +286,7 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
                         Anterior
                       </Button>
 
-                      <span className="text-xs text-muted-foreground">
+                      <span className="rounded-full border border-border/70 bg-background/60 px-3 py-1 text-xs text-muted-foreground">
                         Página {currentPage} de {totalPages}
                       </span>
 

@@ -5,28 +5,26 @@ import { cn } from "@/lib/utils";
 
 // Badge com variants para status e prioridades específicas do dashboard
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-[0.04em] transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+          "border-primary/40 bg-primary/20 text-primary-foreground hover:bg-primary/30",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "border-border/70 bg-secondary text-secondary-foreground hover:bg-secondary/85",
         destructive:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        outline: "text-foreground",
+          "border-destructive/40 bg-destructive/20 text-destructive-foreground hover:bg-destructive/30",
+        outline: "border-border/80 bg-background/60 text-foreground",
 
-        // --- Variants de prioridade ---
-        priorityHigh: "border-transparent bg-red-100 text-red-800",
-        priorityMedium: "border-transparent bg-yellow-100 text-yellow-800",
-        priorityLow: "border-transparent bg-green-100 text-green-800",
+        priorityHigh: "border-rose-500/30 bg-rose-500/12 text-rose-200",
+        priorityMedium: "border-amber-500/30 bg-amber-500/12 text-amber-200",
+        priorityLow: "border-emerald-500/25 bg-emerald-500/12 text-emerald-200",
 
-        // --- Variants de status ---
-        statusPending: "border-transparent bg-slate-100 text-slate-800",
-        statusInProgress: "border-transparent bg-blue-100 text-blue-800",
-        statusDone: "border-transparent bg-emerald-100 text-emerald-800",
-        statusCanceled: "border-transparent bg-zinc-200 text-zinc-700 line-through",
+        statusPending: "border-slate-400/20 bg-slate-400/10 text-slate-200",
+        statusInProgress: "border-sky-500/25 bg-sky-500/12 text-sky-200",
+        statusDone: "border-primary/35 bg-primary/18 text-primary-foreground",
+        statusCanceled: "border-zinc-500/25 bg-zinc-500/12 text-zinc-300 line-through",
       },
     },
     defaultVariants: {

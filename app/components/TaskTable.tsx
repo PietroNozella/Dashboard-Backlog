@@ -22,7 +22,6 @@ interface TaskTableProps {
   variant?: "default" | "embedded";
 }
 
-// Tabela de tarefas - row click abre modal de edição
 export function TaskTable({
   tasks,
   onRowClick,
@@ -30,7 +29,7 @@ export function TaskTable({
 }: TaskTableProps) {
   if (tasks.length === 0) {
     return (
-      <div className="rounded-md border bg-card p-12 text-center">
+      <div className="rounded-[1.5rem] border border-border/80 bg-card/70 p-12 text-center shadow-[0_16px_40px_rgba(0,0,0,0.16)]">
         <p className="text-sm text-muted-foreground">
           Nenhuma tarefa encontrada. Crie a primeira tarefa para começar.
         </p>
@@ -57,7 +56,7 @@ export function TaskTable({
           <TableRow
             key={task.id}
             onClick={() => onRowClick(task)}
-            className="cursor-pointer"
+            className="group cursor-pointer"
           >
             <TableCell>
               <Badge variant={statusToBadgeVariant(task.status)}>
@@ -69,10 +68,14 @@ export function TaskTable({
                 {task.priority}
               </Badge>
             </TableCell>
-            <TableCell className="font-medium">{task.requester}</TableCell>
-            <TableCell>{formatDateBR(task.request_date)}</TableCell>
+            <TableCell className="font-medium text-foreground">
+              {task.requester}
+            </TableCell>
+            <TableCell className="text-muted-foreground">
+              {formatDateBR(task.request_date)}
+            </TableCell>
             <TableCell className="max-w-[300px]">
-              <span className="flex items-center gap-1.5 truncate">
+              <span className="flex items-center gap-1.5 truncate font-medium text-foreground transition-colors group-hover:text-primary-foreground">
                 {task.title}
                 {task.attachment_url && (
                   <span title="Tem anexo PDF">
@@ -81,9 +84,15 @@ export function TaskTable({
                 )}
               </span>
             </TableCell>
-            <TableCell>{task.assignee}</TableCell>
-            <TableCell>{formatDateBR(task.start_date)}</TableCell>
-            <TableCell>{formatDateBR(task.completion_date)}</TableCell>
+            <TableCell className="text-muted-foreground">
+              {task.assignee}
+            </TableCell>
+            <TableCell className="text-muted-foreground">
+              {formatDateBR(task.start_date)}
+            </TableCell>
+            <TableCell className="text-muted-foreground">
+              {formatDateBR(task.completion_date)}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -94,5 +103,9 @@ export function TaskTable({
     return table;
   }
 
-  return <div className="rounded-md border bg-card">{table}</div>;
+  return (
+    <div className="overflow-hidden rounded-[1.5rem] border border-border/80 bg-card/75 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+      {table}
+    </div>
+  );
 }

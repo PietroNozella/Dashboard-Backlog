@@ -16,8 +16,8 @@ export default async function HomePage() {
   // Em caso de erro de conexão/credenciais, mostra mensagem amigável
   if (error) {
     return (
-      <main className="container py-10">
-        <div className="rounded-md border border-destructive bg-destructive/10 p-6">
+      <main className="container py-10 md:py-14">
+        <div className="rounded-3xl border border-destructive/60 bg-destructive/10 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
           <h2 className="font-semibold text-destructive">
             Erro ao carregar tarefas
           </h2>
@@ -34,7 +34,7 @@ export default async function HomePage() {
   const tasks = (data ?? []) as Task[];
 
   return (
-    <main className="container py-8">
+    <main className="container py-8 md:py-12">
       <TasksDashboard initialTasks={tasks} />
     </main>
   );

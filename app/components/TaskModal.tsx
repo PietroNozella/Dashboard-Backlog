@@ -3,6 +3,13 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { FileText, Trash2, Upload, X } from "lucide-react";
 
+import {
+  createTask,
+  deleteAttachment,
+  deleteTask,
+  updateTask,
+  uploadAttachment,
+} from "@/app/actions/tasks";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,14 +29,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-
-import {
-  createTask,
-  deleteAttachment,
-  deleteTask,
-  updateTask,
-  uploadAttachment,
-} from "@/app/actions/tasks";
 import {
   TASK_ASSIGNEES,
   TASK_PRIORITIES,
@@ -85,7 +84,6 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
   const [form, setForm] = useState<TaskInput>(() => buildInitialState(task));
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
-
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -105,8 +103,8 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
     if (!file) return;
 
     if (file.type !== "application/pdf") {
@@ -126,7 +124,9 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
   async function handleRemoveAttachment() {
     if (pendingFile) {
       setPendingFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
       return;
     }
 
@@ -144,12 +144,12 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
     }
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
     setError(null);
 
     if (!form.title.trim() || !form.requester.trim()) {
-      setError("Solicitante e Tarefa são obrigatórios.");
+      setError("Solicitante e tarefa são obrigatórios.");
       return;
     }
 
@@ -160,13 +160,12 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
 
         if (pendingFile) {
           setIsUploading(true);
-          const fd = new FormData();
-          fd.append("file", pendingFile);
+          const formData = new FormData();
+          formData.append("file", pendingFile);
 
-          const uploadedAttachment = await uploadAttachment(fd);
+          const uploadedAttachment = await uploadAttachment(formData);
           attachmentUrl = uploadedAttachment.url;
           attachmentName = uploadedAttachment.name;
-
           setIsUploading(false);
         }
 
@@ -183,9 +182,11 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
         }
 
         onOpenChange(false);
-      } catch (err) {
+      } catch (submitError) {
         setIsUploading(false);
-        setError(err instanceof Error ? err.message : "Erro desconhecido");
+        setError(
+          submitError instanceof Error ? submitError.message : "Erro desconhecido",
+        );
       }
     });
   }
@@ -196,11 +197,15 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
 
     startTransition(async () => {
       try {
-        if (task.attachment_url) await deleteAttachment(task.attachment_url);
+        if (task.attachment_url) {
+          await deleteAttachment(task.attachment_url);
+        }
         await deleteTask(task.id);
         onOpenChange(false);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Erro desconhecido");
+      } catch (deleteError) {
+        setError(
+          deleteError instanceof Error ? deleteError.message : "Erro desconhecido",
+        );
       }
     });
   }
@@ -228,20 +233,20 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 rounded-[1.5rem] border border-border/70 bg-background/35 p-4 md:grid-cols-3">
             <div className="space-y-1.5">
               <Label htmlFor="status">Status</Label>
               <Select
                 value={form.status}
-                onValueChange={(v) => updateField("status", v as TaskStatus)}
+                onValueChange={(value) => updateField("status", value as TaskStatus)}
               >
                 <SelectTrigger id="status">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {TASK_STATUSES.map((s) => (
-                    <SelectItem key={s} value={s}>
-                      {s}
+                  {TASK_STATUSES.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {status}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -252,15 +257,17 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
               <Label htmlFor="priority">Prioridade</Label>
               <Select
                 value={form.priority}
-                onValueChange={(v) => updateField("priority", v as TaskPriority)}
+                onValueChange={(value) =>
+                  updateField("priority", value as TaskPriority)
+                }
               >
                 <SelectTrigger id="priority">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {TASK_PRIORITIES.map((p) => (
-                    <SelectItem key={p} value={p}>
-                      {p}
+                  {TASK_PRIORITIES.map((priority) => (
+                    <SelectItem key={priority} value={priority}>
+                      {priority}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -271,15 +278,17 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
               <Label htmlFor="assignee">Responsável</Label>
               <Select
                 value={form.assignee}
-                onValueChange={(v) => updateField("assignee", v as TaskAssignee)}
+                onValueChange={(value) =>
+                  updateField("assignee", value as TaskAssignee)
+                }
               >
                 <SelectTrigger id="assignee">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {TASK_ASSIGNEES.map((a) => (
-                    <SelectItem key={a} value={a}>
-                      {a}
+                  {TASK_ASSIGNEES.map((assignee) => (
+                    <SelectItem key={assignee} value={assignee}>
+                      {assignee}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -287,93 +296,97 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 rounded-[1.5rem] border border-border/70 bg-background/35 p-4 md:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="requester">Solicitante *</Label>
               <Input
                 id="requester"
                 value={form.requester}
-                onChange={(e) => updateField("requester", e.target.value)}
+                onChange={(event) => updateField("requester", event.target.value)}
                 placeholder="Ex.: Willian(altivuz)"
                 required
               />
               <p className="text-xs text-muted-foreground">
-                Use o formato Nome(cliente) para separar automaticamente as caixas
-                por cliente.
+                Use o formato Nome(cliente) para separar automaticamente as
+                caixas por cliente.
               </p>
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="request_date">Data da Solicitação</Label>
+              <Label htmlFor="request_date">Data da solicitação</Label>
               <Input
                 id="request_date"
                 type="date"
                 value={form.request_date}
-                onChange={(e) => updateField("request_date", e.target.value)}
+                onChange={(event) =>
+                  updateField("request_date", event.target.value)
+                }
               />
             </div>
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 rounded-[1.5rem] border border-border/70 bg-background/35 p-4">
             <Label htmlFor="title">Tarefa *</Label>
             <Input
               id="title"
               value={form.title}
-              onChange={(e) => updateField("title", e.target.value)}
+              onChange={(event) => updateField("title", event.target.value)}
               placeholder="Título curto da tarefa"
               required
             />
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 rounded-[1.5rem] border border-border/70 bg-background/35 p-4">
             <Label htmlFor="description">Descrição</Label>
             <Textarea
               id="description"
               value={form.description ?? ""}
-              onChange={(e) => updateField("description", e.target.value)}
+              onChange={(event) => updateField("description", event.target.value)}
               placeholder="Detalhes da tarefa..."
               rows={3}
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 rounded-[1.5rem] border border-border/70 bg-background/35 p-4 md:grid-cols-2">
             <div className="space-y-1.5">
-              <Label htmlFor="start_date">Data de Início</Label>
+              <Label htmlFor="start_date">Data de início</Label>
               <Input
                 id="start_date"
                 type="date"
                 value={form.start_date ?? ""}
-                onChange={(e) => updateField("start_date", e.target.value)}
+                onChange={(event) => updateField("start_date", event.target.value)}
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="completion_date">Data de Conclusão</Label>
+              <Label htmlFor="completion_date">Data de conclusão</Label>
               <Input
                 id="completion_date"
                 type="date"
                 value={form.completion_date ?? ""}
-                onChange={(e) => updateField("completion_date", e.target.value)}
+                onChange={(event) =>
+                  updateField("completion_date", event.target.value)
+                }
               />
             </div>
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 rounded-[1.5rem] border border-border/70 bg-background/35 p-4">
             <Label htmlFor="notes">Observações</Label>
             <Textarea
               id="notes"
               value={form.notes ?? ""}
-              onChange={(e) => updateField("notes", e.target.value)}
+              onChange={(event) => updateField("notes", event.target.value)}
               placeholder="Notas internas..."
               rows={2}
             />
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 rounded-[1.5rem] border border-border/70 bg-background/35 p-4">
             <Label>Anexo (PDF)</Label>
 
             {hasAttachment ? (
-              <div className="flex items-center gap-2 rounded-md border bg-muted/40 px-3 py-2">
+              <div className="flex items-center gap-2 rounded-xl border border-border/70 bg-muted/30 px-3 py-2">
                 <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                 <span className="flex-1 truncate text-sm">{attachmentLabel}</span>
 
@@ -403,7 +416,7 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={busy}
-                className="flex w-full items-center gap-2 rounded-md border border-dashed px-3 py-3 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary disabled:opacity-50"
+                className="flex w-full items-center gap-2 rounded-xl border border-dashed border-border/80 bg-background/25 px-3 py-3 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary disabled:opacity-50"
               >
                 <Upload className="h-4 w-4" />
                 Clique para selecionar um PDF (máx. 10 MB)
@@ -420,7 +433,10 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
           </div>
 
           {error && (
-            <p className="text-sm text-destructive" role="alert">
+            <p
+              className="rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+              role="alert"
+            >
               {error}
             </p>
           )}
