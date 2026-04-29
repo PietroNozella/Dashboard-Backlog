@@ -163,7 +163,7 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
               </h1>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground xl:text-[15px] xl:leading-7">
                 Visualize demandas por cliente com leitura mais clara para
-                priorizaÃ§Ã£o, andamento e alinhamento entre times.
+                {"prioriza\u00e7\u00e3o, andamento e alinhamento entre times."}
               </p>
             </div>
           </div>
@@ -180,7 +180,7 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
         <div className="mt-8 grid gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.1fr)_minmax(0,1.4fr)] xl:gap-4">
           <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-4 backdrop-blur-sm xl:px-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              VisÃ­veis
+              {"Vis\u00edveis"}
             </p>
             <p className="mt-2 text-2xl font-semibold text-foreground xl:text-[2rem]">
               {visibleTasks.length}
@@ -198,7 +198,7 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
 
           <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-4 backdrop-blur-sm xl:px-5">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              OrganizaÃ§Ã£o
+              {"Organiza\u00e7\u00e3o"}
             </p>
             <p className="mt-2 max-w-xl text-sm leading-6 text-foreground">
               Caixas por cliente para evitar mistura entre contas.
@@ -290,7 +290,7 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
                       </Button>
 
                       <span className="rounded-full border border-border/70 bg-background/60 px-3 py-1 text-xs text-muted-foreground">
-                        PÃ¡gina {currentPage} de {totalPages}
+                        {"P\u00e1gina "}{currentPage} de {totalPages}
                       </span>
 
                       <Button
@@ -302,7 +302,7 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
                         }
                         disabled={currentPage === totalPages}
                       >
-                        PrÃ³xima
+                        {"Pr\u00f3xima"}
                         <ChevronRight className="ml-1 h-4 w-4" />
                       </Button>
                     </div>
