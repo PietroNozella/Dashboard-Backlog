@@ -85,10 +85,10 @@ export function Filters(props: FiltersProps) {
           }
         >
           <SelectTrigger className="xl:col-span-2">
-            <SelectValue placeholder="ResponsÃ¡vel" />
+            <SelectValue placeholder={"Respons\u00e1vel"} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={ALL}>Todos responsÃ¡veis</SelectItem>
+            <SelectItem value={ALL}>{"Todos respons\u00e1veis"}</SelectItem>
             {TASK_ASSIGNEES.map((assignee) => (
               <SelectItem key={assignee} value={assignee}>
                 {assignee}
@@ -126,7 +126,7 @@ export function Filters(props: FiltersProps) {
           <SelectContent>
             <SelectItem value="request_date_desc">Mais recentes</SelectItem>
             <SelectItem value="request_date_asc">Mais antigas</SelectItem>
-            <SelectItem value="priority">Prioridade (Alta â†’ Baixa)</SelectItem>
+            <SelectItem value="priority">{"Prioridade (Alta \u2192 Baixa)"}</SelectItem>
           </SelectContent>
         </Select>
       </div>
