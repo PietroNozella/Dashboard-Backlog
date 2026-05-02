@@ -4,25 +4,38 @@
 
 @layer base {
   :root {
-    --background: 213 43% 10%;
-    --foreground: 180 14% 92%;
-    --card: 211 40% 14%;
-    --card-foreground: 180 14% 92%;
-    --popover: 210 37% 13%;
-    --popover-foreground: 180 14% 92%;
-    --primary: 151 24% 33%;
-    --primary-foreground: 165 18% 96%;
-    --secondary: 208 28% 19%;
-    --secondary-foreground: 180 14% 92%;
-    --muted: 208 24% 17%;
-    --muted-foreground: 190 14% 72%;
-    --accent: 154 22% 24%;
-    --accent-foreground: 165 18% 96%;
-    --destructive: 4 62% 44%;
+    /* Azul marinho profundo como base */
+    --background: 213 52% 9%;
+    --foreground: 160 18% 93%;
+
+    /* Cards em azul marinho levemente mais claro */
+    --card: 212 46% 13%;
+    --card-foreground: 160 18% 93%;
+
+    --popover: 212 46% 12%;
+    --popover-foreground: 160 18% 93%;
+
+    /* Verde mais saturado e presente para botões e acentos */
+    --primary: 151 42% 36%;
+    --primary-foreground: 160 22% 97%;
+
+    --secondary: 210 36% 17%;
+    --secondary-foreground: 160 18% 93%;
+
+    /* Accent: verde escuro do header — usado em hovers */
+    --accent: 150 34% 20%;
+    --accent-foreground: 160 22% 97%;
+
+    --muted: 210 30% 15%;
+    --muted-foreground: 200 16% 68%;
+
+    --destructive: 4 62% 46%;
     --destructive-foreground: 0 0% 98%;
-    --border: 206 24% 24%;
-    --input: 206 25% 19%;
-    --ring: 148 27% 40%;
+
+    /* Bordas mais visíveis */
+    --border: 210 28% 28%;
+    --input: 210 32% 16%;
+    --ring: 148 40% 44%;
     --radius: 0.9rem;
   }
 }
@@ -34,10 +47,11 @@
 
   body {
     @apply bg-background text-foreground;
+    /* Azul marinho sólido — sem gradiente que "divide" o fundo */
+    background-color: hsl(213, 52%, 9%);
     background-image:
-      radial-gradient(circle at top left, rgba(47, 86, 71, 0.26), transparent 28%),
-      radial-gradient(circle at top right, rgba(17, 44, 78, 0.34), transparent 32%),
-      linear-gradient(180deg, rgba(6, 16, 29, 0.98), rgba(13, 28, 43, 0.98));
+      radial-gradient(ellipse at 60% 0%, rgba(10, 38, 30, 0.45), transparent 55%),
+      radial-gradient(ellipse at 100% 80%, rgba(8, 28, 52, 0.5), transparent 50%);
     background-attachment: fixed;
   }
 }

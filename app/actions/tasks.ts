@@ -24,6 +24,7 @@ function normalize(input: TaskInput): TaskInput {
     completion_date: input.completion_date || null,
     attachment_url: input.attachment_url || null,
     attachment_name: input.attachment_name?.trim() || null,
+    flagged: input.flagged ?? false,
   };
 }
 

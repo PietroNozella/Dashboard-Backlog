@@ -1,6 +1,6 @@
 "use client";
 
-import { Paperclip } from "lucide-react";
+import { AlertTriangle, Paperclip } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import {
@@ -29,7 +29,7 @@ export function TaskTable({
 }: TaskTableProps) {
   if (tasks.length === 0) {
     return (
-      <div className="rounded-[1.5rem] border border-border/80 bg-card/70 p-12 text-center shadow-[0_16px_40px_rgba(0,0,0,0.16)]">
+      <div className="rounded-[1.5rem] border border-border/70 bg-card p-12 text-center shadow-[0_16px_40px_rgba(0,0,0,0.3)]">
         <p className="text-sm text-muted-foreground">
           Nenhuma tarefa encontrada. Crie a primeira tarefa para comeÃ§ar.
         </p>
@@ -76,6 +76,11 @@ export function TaskTable({
             </TableCell>
             <TableCell className="max-w-[320px] xl:max-w-[560px]">
               <span className="flex items-start gap-1.5 font-medium leading-6 text-foreground transition-colors group-hover:text-primary-foreground">
+                {task.flagged && (
+                  <span title="Aviso: há algo importante nesta tarefa" className="pt-0.5">
+                    <AlertTriangle className="h-3.5 w-3.5 shrink-0 text-amber-400" />
+                  </span>
+                )}
                 {task.title}
                 {task.attachment_url && (
                   <span title="Tem anexo PDF" className="pt-1">
@@ -104,7 +109,7 @@ export function TaskTable({
   }
 
   return (
-    <div className="overflow-hidden rounded-[1.5rem] border border-border/80 bg-card/75 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+    <div className="overflow-hidden rounded-[1.5rem] border border-border/70 bg-card shadow-[0_18px_50px_rgba(0,0,0,0.35)]">
       {table}
     </div>
   );

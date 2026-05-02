@@ -38,7 +38,7 @@ interface FiltersProps {
 
 export function Filters(props: FiltersProps) {
   return (
-    <section className="rounded-[1.75rem] border border-border/80 bg-card/80 p-4 shadow-[0_18px_50px_rgba(0,0,0,0.22)] backdrop-blur-sm lg:p-5 xl:p-6">
+    <section className="rounded-[1.75rem] border border-border/70 bg-card p-4 shadow-[0_18px_50px_rgba(0,0,0,0.35)] lg:p-5 xl:p-6">
       <div className="mb-4 xl:mb-5">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary/85">
           Filtros

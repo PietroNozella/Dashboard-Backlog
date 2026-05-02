@@ -150,7 +150,7 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
 
   return (
     <div className="space-y-8 xl:space-y-10">
-      <section className="overflow-hidden rounded-[2rem] border border-border/70 bg-[linear-gradient(135deg,rgba(8,22,36,0.92),rgba(18,42,39,0.88))] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.28)] lg:p-8 xl:p-10 2xl:p-12">
+      <section className="overflow-hidden rounded-[2rem] border border-[rgba(44,90,60,0.55)] bg-[#122a1e] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.45)] lg:p-8 xl:p-10 2xl:p-12">
         <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between xl:gap-10">
           <div className="space-y-3 xl:max-w-4xl">
             <span className="inline-flex w-fit items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-foreground/90">
@@ -178,8 +178,8 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
         </div>
 
         <div className="mt-8 grid gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.1fr)_minmax(0,1.4fr)] xl:gap-4">
-          <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-4 backdrop-blur-sm xl:px-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <div className="rounded-2xl border border-[rgba(44,90,60,0.4)] bg-[rgba(8,28,20,0.6)] px-4 py-4 xl:px-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary/70">
               {"Vis\u00edveis"}
             </p>
             <p className="mt-2 text-2xl font-semibold text-foreground xl:text-[2rem]">
@@ -187,8 +187,8 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-4 backdrop-blur-sm xl:px-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <div className="rounded-2xl border border-[rgba(44,90,60,0.4)] bg-[rgba(8,28,20,0.6)] px-4 py-4 xl:px-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary/70">
               Total
             </p>
             <p className="mt-2 text-2xl font-semibold text-foreground xl:text-[2rem]">
@@ -196,8 +196,8 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-border/60 bg-background/35 px-4 py-4 backdrop-blur-sm xl:px-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <div className="rounded-2xl border border-[rgba(44,90,60,0.4)] bg-[rgba(8,28,20,0.6)] px-4 py-4 xl:px-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary/70">
               {"Organiza\u00e7\u00e3o"}
             </p>
             <p className="mt-2 max-w-xl text-sm leading-6 text-foreground">
@@ -243,9 +243,9 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
             return (
               <section
                 key={group.client}
-                className="overflow-hidden rounded-[1.75rem] border border-border/80 bg-card/80 shadow-[0_20px_60px_rgba(0,0,0,0.2)] backdrop-blur-sm"
+                className="overflow-hidden rounded-[1.75rem] border border-border/70 bg-card shadow-[0_20px_60px_rgba(0,0,0,0.35)]"
               >
-                <div className="flex flex-col gap-3 border-b border-border/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0))] px-5 py-4 sm:flex-row sm:items-center sm:justify-between xl:px-6 xl:py-5">
+                <div className="flex flex-col gap-3 border-b border-border/70 bg-[rgba(255,255,255,0.02)] px-5 py-4 sm:flex-row sm:items-center sm:justify-between xl:px-6 xl:py-5">
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary/85">
                       Cliente
@@ -268,7 +268,7 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
                 />
 
                 {hasPagination && (
-                  <div className="flex flex-col gap-3 border-t border-border/70 bg-background/35 px-5 py-3 sm:flex-row sm:items-center sm:justify-between xl:px-6">
+                  <div className="flex flex-col gap-3 border-t border-border/70 bg-muted/60 px-5 py-3 sm:flex-row sm:items-center sm:justify-between xl:px-6">
                     <p className="text-xs text-muted-foreground">
                       Mostrando {pageStart + 1}-
                       {Math.min(pageStart + PAGE_SIZE, group.tasks.length)} de{" "}

@@ -31,6 +31,7 @@ export interface Task {
   notes: string | null;
   attachment_url: string | null; // URL publica do PDF no Supabase Storage
   attachment_name: string | null; // Nome original do PDF para exibicao
+  flagged: boolean; // Aviso de prioridade — algo importante para ver
   created_at: string;
   updated_at: string;
 }
@@ -49,4 +50,5 @@ export interface TaskInput {
   notes: string | null;
   attachment_url: string | null;
   attachment_name: string | null;
+  flagged: boolean;
 }

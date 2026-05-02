@@ -21,10 +21,10 @@ const badgeVariants = cva(
         priorityMedium: "border-amber-500/30 bg-amber-500/12 text-amber-200",
         priorityLow: "border-emerald-500/25 bg-emerald-500/12 text-emerald-200",
 
-        statusPending: "border-slate-400/20 bg-slate-400/10 text-slate-200",
+        statusPending: "border-amber-400/30 bg-amber-400/10 text-amber-200",
         statusInProgress: "border-sky-500/25 bg-sky-500/12 text-sky-200",
-        statusDone: "border-primary/35 bg-primary/18 text-primary-foreground",
-        statusCanceled: "border-zinc-500/25 bg-zinc-500/12 text-zinc-300 line-through",
+        statusDone: "border-teal-500/30 bg-teal-500/12 text-teal-200",
+        statusCanceled: "border-zinc-600/35 bg-zinc-600/15 text-zinc-400/70 line-through",
       },
     },
     defaultVariants: {

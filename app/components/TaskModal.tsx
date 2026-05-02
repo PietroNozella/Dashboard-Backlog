@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
-import { FileText, Trash2, Upload, X } from "lucide-react";
+import { AlertTriangle, FileText, Trash2, Upload, X } from "lucide-react";
 
 import {
   createTask,
@@ -61,6 +61,7 @@ function buildInitialState(task: Task | null): TaskInput {
       notes: task.notes,
       attachment_url: task.attachment_url,
       attachment_name: task.attachment_name,
+      flagged: task.flagged,
     };
   }
 
@@ -77,6 +78,7 @@ function buildInitialState(task: Task | null): TaskInput {
     notes: "",
     attachment_url: null,
     attachment_name: null,
+    flagged: false,
   };
 }
 
@@ -431,6 +433,28 @@ export function TaskModal({ open, onOpenChange, task }: TaskModalProps) {
               onChange={handleFileChange}
             />
           </div>
+
+          {/* Toggle de aviso — sinaliza que há algo importante a ver na tarefa */}
+          <button
+            type="button"
+            onClick={() => updateField("flagged", !form.flagged)}
+            className={[
+              "flex w-full items-center gap-3 rounded-[1.5rem] border px-4 py-3 text-sm transition-colors",
+              form.flagged
+                ? "border-amber-400/40 bg-amber-400/10 text-amber-200 hover:bg-amber-400/15"
+                : "border-border/70 bg-background/35 text-muted-foreground hover:border-amber-400/30 hover:text-amber-200/70",
+            ].join(" ")}
+          >
+            <AlertTriangle
+              className={[
+                "h-4 w-4 shrink-0 transition-colors",
+                form.flagged ? "text-amber-400" : "text-muted-foreground/60",
+              ].join(" ")}
+            />
+            <span className="font-medium">
+              {form.flagged ? "Aviso ativo — há algo importante nesta tarefa" : "Marcar aviso de atenção"}
+            </span>
+          </button>
 
           {error && (
             <p
