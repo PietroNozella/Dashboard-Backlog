@@ -226,23 +226,23 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
       />
 
       {flaggedTasks.length > 0 && (
-        <section className="overflow-hidden rounded-[1.75rem] border border-amber-500/30 bg-[rgba(30,20,8,0.85)] shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
-          <div className="flex flex-col gap-3 border-b border-amber-500/20 bg-[rgba(251,191,36,0.04)] px-5 py-4 sm:flex-row sm:items-center sm:justify-between xl:px-6 xl:py-5">
-            <div className="flex items-center gap-3">
-              <AlertTriangle className="h-4 w-4 shrink-0 text-amber-400" />
+        <section className="overflow-hidden rounded-[1.75rem] border border-amber-500/25 bg-card shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+          <div className="flex flex-col gap-3 border-b border-amber-500/15 bg-[rgba(251,191,36,0.03)] px-5 py-4 sm:flex-row sm:items-center sm:justify-between xl:px-6 xl:py-5">
+            <div className="flex items-center gap-2.5">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-amber-500/30 bg-amber-500/10">
+                <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
+              </div>
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-400/80">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-400/70">
                   Requer atenção
                 </p>
-                <h2 className="text-lg font-semibold text-foreground xl:text-xl">
-                  Avisos ativos
+                <h2 className="text-base font-semibold text-foreground xl:text-lg">
+                  {flaggedTasks.length === 1
+                    ? "1 tarefa marcada com aviso"
+                    : `${flaggedTasks.length} tarefas marcadas com aviso`}
                 </h2>
               </div>
             </div>
-            <span className="inline-flex w-fit items-center rounded-full border border-amber-500/25 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-200">
-              {flaggedTasks.length}{" "}
-              {flaggedTasks.length === 1 ? "tarefa" : "tarefas"}
-            </span>
           </div>
           <TaskTable
             tasks={flaggedTasks}

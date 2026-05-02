@@ -31,7 +31,7 @@ export function TaskTable({
     return (
       <div className="rounded-[1.5rem] border border-border/70 bg-card p-12 text-center shadow-[0_16px_40px_rgba(0,0,0,0.3)]">
         <p className="text-sm text-muted-foreground">
-          Nenhuma tarefa encontrada. Crie a primeira tarefa para comeÃ§ar.
+          Nenhuma tarefa encontrada. Crie a primeira tarefa para começar.
         </p>
       </div>
     );
@@ -44,11 +44,11 @@ export function TaskTable({
           <TableHead className="w-[130px]">Status</TableHead>
           <TableHead className="w-[120px]">Prioridade</TableHead>
           <TableHead>Solicitante</TableHead>
-          <TableHead className="w-[130px]">SolicitaÃ§Ã£o</TableHead>
+          <TableHead className="w-[130px]">Solicitação</TableHead>
           <TableHead>Tarefa</TableHead>
-          <TableHead className="w-[130px]">ResponsÃ¡vel</TableHead>
-          <TableHead className="w-[120px]">InÃ­cio</TableHead>
-          <TableHead className="w-[120px]">ConclusÃ£o</TableHead>
+          <TableHead className="w-[130px]">Responsável</TableHead>
+          <TableHead className="w-[120px]">Início</TableHead>
+          <TableHead className="w-[120px]">Conclusão</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
