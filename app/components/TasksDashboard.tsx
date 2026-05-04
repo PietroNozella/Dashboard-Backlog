@@ -156,59 +156,18 @@ export function TasksDashboard({ initialTasks }: TasksDashboardProps) {
   return (
     <div className="space-y-8 xl:space-y-10">
       <section className="overflow-hidden rounded-[2rem] border border-[rgba(44,90,60,0.55)] bg-[#122a1e] p-6 shadow-[0_28px_80px_rgba(0,0,0,0.45)] lg:p-8 xl:p-10 2xl:p-12">
-        <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between xl:gap-10">
-          <div className="space-y-3 xl:max-w-4xl">
-            <span className="inline-flex w-fit items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-foreground/90">
-              Painel operacional
-            </span>
-
-            <div>
-              <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl xl:text-[2.75rem]">
-                Backlog de Tarefas
-              </h1>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground xl:text-[15px] xl:leading-7">
-                Visualize demandas por cliente com leitura mais clara para
-                {"prioriza\u00e7\u00e3o, andamento e alinhamento entre times."}
-              </p>
-            </div>
-          </div>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl xl:text-[2.75rem]">
+            Backlog de Tarefas
+          </h1>
 
           <Button
             onClick={handleNewTask}
-            className="min-w-[160px] self-start xl:min-w-[190px] xl:self-auto"
+            className="min-w-[160px] self-start sm:self-auto xl:min-w-[190px]"
           >
             <Plus className="mr-2 h-4 w-4" />
             Nova tarefa
           </Button>
-        </div>
-
-        <div className="mt-8 grid gap-3 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.1fr)_minmax(0,1.4fr)] xl:gap-4">
-          <div className="rounded-2xl border border-[rgba(44,90,60,0.4)] bg-[rgba(8,28,20,0.6)] px-4 py-4 xl:px-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary/70">
-              {"Vis\u00edveis"}
-            </p>
-            <p className="mt-2 text-2xl font-semibold text-foreground xl:text-[2rem]">
-              {visibleTasks.length}
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-[rgba(44,90,60,0.4)] bg-[rgba(8,28,20,0.6)] px-4 py-4 xl:px-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary/70">
-              Total
-            </p>
-            <p className="mt-2 text-2xl font-semibold text-foreground xl:text-[2rem]">
-              {tasks.length}
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-[rgba(44,90,60,0.4)] bg-[rgba(8,28,20,0.6)] px-4 py-4 xl:px-5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary/70">
-              {"Organiza\u00e7\u00e3o"}
-            </p>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-foreground">
-              Caixas por cliente para evitar mistura entre contas.
-            </p>
-          </div>
         </div>
       </section>
 
